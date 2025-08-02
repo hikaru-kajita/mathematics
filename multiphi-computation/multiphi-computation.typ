@@ -18,6 +18,8 @@
 
 #set text(font: ("New Computer Modern", "Harano Aji Mincho"))
 
+// Make all equations display-style.
+// Code borrowed from @frozolotl from https://github.com/typst/typst/discussions/2242#discussioncomment-7112991
 #show math.equation.where(block: false): it => {
   if it.has("label") and it.label == <stop-equation-recursion> {
     it
