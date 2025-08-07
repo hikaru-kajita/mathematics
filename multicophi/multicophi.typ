@@ -174,12 +174,12 @@
 
 これらの議論から, 一般の正整数 $k$ について, $"co"phi^k (n):=n-2^(k-1)phi^k (n)$ と定義する.
 
-以下, $k>2$ について考え, また便宜上 $phi^0 (n)=n$ とする.
+また便宜上 $phi^0 (n)=n$ とする.
 
 また, $k$ は $n$ に依らない定数とする.
 
 #theorem[
-  $"co"phi^k (n)<=0$ ならば, $phi^k (n)=1$.
+  $k>=1$ とする. $"co"phi^k (n)<=0$ ならば, $phi^k (n)=1$.
 ] <comultiphi-nonpositive>
 
 #proof[
@@ -207,7 +207,7 @@
 この逆は成り立たないことに注意. (例: $n=4, k=2$)
 
 #corollary[
-  $C$ を整数の定数とする.
+  $C$ を整数の定数, $k>=1$ とする.
 
   $C<=0$ について, $"co"phi^k (n)=C$ の唯一の解は $n=2^(k-1)+C$.  
 ]
@@ -231,15 +231,17 @@
 さて, 主定理の証明の前に補助関数を用意し, それについてのいくつかの補題を証明する.
 
 #definition[
-  $display(overline(phi)^k (n):=phi(n) product_(1<=j<k)product_(p | phi^j (n), p eq.not 2)(1-1/p))$.
+  $display(overline(phi)^k (n):=n product_(0<=j<k)product_(p | phi^j (n), p eq.not 2)(1-1/p))$.
 ]
 
+特に $k=0$ の場合は $overline(phi)^k (n)$ は $n$ と定義される.
+
 #lemma[
-  $n$ が合成数ならば, $overline(phi)^k (n)<=n-sqrt(n)$.
+  $k>=1$ とする. $n$ が奇数で合成数ならば, $overline(phi)^k (n)<=n-sqrt(n)$.
 ] <overline-phi-limit>
 
 #proof[
-  $display(overline(phi)^k (n)=phi(n) product_(1<=j<k)product_(p | phi^j (n), p eq.not 2)(1-1/p)<=phi(n)<=n-sqrt(n).)$
+  $display(overline(phi)^k (n)=n product_(0<=j<k)product_(p | phi^j (n), p eq.not 2)(1-1/p)<=n product_(p | n, p eq.not 2)(1-1/p)=phi(n)<=n-sqrt(n).)$
 ]
 
 #lemma[
@@ -269,26 +271,19 @@
 ]
 
 #lemma[
-  $n$ が $phi^(k-1) (n)>1$ を満たす奇素数とすると, $n-1=2^e L (e>0, L:odd)$ と書ける.
+  $n$ を 奇素数とすると, $n-1=2^e L (e>0, L:odd)$ と書ける.
 
-  このとき, $overline(phi)^k (n)=2^e overline(phi)^(k-1) (L)$ が成り立つ.
+  このとき, $k>=1$ について, $overline(phi)^k (n)=2^e overline(phi)^(k-1) (L)$ が成り立つ.
 ] <lemma-transition>
 
 #proof[
   $phi(n)=n-1=2^e L$ であることに注意して計算すると,
 
-  $ overline(phi)^k (n)&=phi(n) product_(1<=j<k)product_(p | phi^j (n),p eq.not 2)(1-1/p)=2^e L product_(1<=j<k)product_(p | phi^(j-1) (2^e L),p eq.not 2) (1-1/p) \
-    &=2^e L product_(0<=j<k-1)product_(p | phi^j (2^e L), p eq.not 2)(1-1/p). $
+  $ overline(phi)^k (n)&=n product_(0<=j<k)product_(p | phi^j (n),p eq.not 2)(1-1/p)={n product_(p | n, p eq.not 2)(1-1/p)}product_(1<=j<k)product_(p | phi^j (n),p eq.not 2)(1-1/p) \
+  &= phi(n)product_(1<=j<k)product_(p | phi^(j-1)(2^e L),p eq.not 2)(1-1/p)=_*phi(n) product_(1<=j<k)product_(p | phi^(j-1)(L), p eq.not 2)(1-1/p) \
+  &= 2^e L product_(0<=j<k)product_(p | phi^j (L),p eq.not 2)(1-1/p)=2^e overline(phi)^(k-1) (L) $.
 
-  ここで先に示した @oddfactor-unchanged より, $phi^j (2^e L)$ と $phi^j (L)$ の素因数を比較すると, 違いは $2$ が含まれるかどうかしかない.
-
-  よって $display(product_(0<=j<k-1)product_(p | phi^j (2^e L), p eq.not 2)(1-1/p)=product_(0<=j<k-1)product_(p | phi^j (L), p eq.not 2)(1-1/p))$.
-
-  代入して続きを計算すると:
-
-  $ overline(phi)^k (n)&=2^e L product_(0<=j<k-1)product_(p | phi^j (2^e L),p eq.not 2)(1-1/p)=2^e L {product_(p | L, p eq.not 2) (1-1/p)}product_(1<=j<k-1)product_(p | phi^j (2^e L), p eq.not 2)(1-1/p). $
-
-  $L$ は奇数なので, $display(product_(p | L, p eq.not 2)(1-1/p)=product_(p | L)(1-1/p))$ となり, これを代入して整理すれば $overline(phi)^k (n)=2^e overline(phi)^(k-1) (L)$ が得られる.
+  なお, $*$ の変形では, @oddfactor-unchanged より, $phi^(j-1)(2^e L)$ と $phi^(j-1)(L)$ の奇素数の素因数が同じであることを利用した.
 ]
 
 #definition[
@@ -297,7 +292,7 @@
   $ R_i (n):=cases(
       n quad &"if" i=0\,,
       display((R_(i-1)(n)-1)/2^(nu_2 (R_(i-1)(n)-1))) quad &"if" i>0 "and" R_(i-1)(n)>1\,,
-      0 quad &"otherwise".
+      "undefined" quad &"otherwise".
     )
   $
 ]
@@ -307,7 +302,7 @@ $R_i (n)$ が1になるまでは $i$ について $R_i (n)$ が狭義単調減�
 #definition[
   正整数 $n$ と $i$ について, $display(E_i (n):=cases(
     nu_2 (R_(i-1)(n)-1) quad &"if" R_(i-1)(n)>1\,,
-    0 quad &"otherwise".
+    "undefined" quad &"otherwise".
   ))$ と定義する.
 ]
 
@@ -339,7 +334,7 @@ $R_i (n)$ が1になるまでは $i$ について $R_i (n)$ が狭義単調減�
 ]
 
 #theorem[
-  $"co"phi^k (n)=C, phi^k (n)>1$ が成り立っているとし, $L=min(I(n), k)$ とおく.
+  $k>1, "co"phi^k (n)=C, phi^(k-1) (n)>1$ が成り立っているとし, $L=min(I(n), k)$ とおく.
 
   $n>C^2$ がさらに成り立つならば, $0<=j<L$ の範囲のすべての整数 $j$ について $R_j (n)$ が奇素数でなければならない.
 
@@ -349,20 +344,23 @@ $R_i (n)$ が1になるまでは $i$ について $R_i (n)$ が狭義単調減�
 #proof[
   @comultiphi-nonpositive の対偶より, $C>=1$.
 
-  $phi^k (n)>1$ より, $phi(n), phi^2 (n), ..., phi^k (n)$ はすべて偶数である.
+  $phi^(k-1) (n)>1$ より, $phi(n), phi^2 (n), ..., phi^(k-1) (n)$ はすべて偶数である.
 
   さて, @comultiphi-nonpositive での式変形より $display(phi^k (n)=phi(n)product_(1<=j<k)product_(p | phi^j (n))(1-1/p))$.
 
-  いま $phi(n), ..., phi^k (n)$ はすべて偶数なので $display(2^(k-1)phi^k (n)=phi(n)product_(1<=j<k)product_(p | phi^j (n), p eq.not 2)(1-1/p))=overline(phi)^k (n)$.
+  いま $phi(n), ..., phi^(k-1) (n)$ はすべて偶数なので $display(2^(k-1)phi^k (n)=phi(n)product_(1<=j<k)product_(p | phi^j (n), p eq.not 2)(1-1/p))$.
 
-  $n=1$ の場合, $phi^k (n)=1$ なのでそもそも除外する.
+  $n=1$ の場合, $phi^(k-1) (n)=1$ なのでそもそも除外する.
 
-  $n$ が合成数ならば, @overline-phi-limit から $overline(phi)^k (n)<=n-sqrt(n)$ より, $"co"phi^k (n)=n-overline(phi)^k (n)>=n-(n-sqrt(n))=sqrt(n)$.
+  $n$ が合成数ならば, $2^(k-1)phi^k (n)<=phi(n)<=n-sqrt(n)$ より, $"co"phi^k (n)>=n-(n-sqrt(n))=sqrt(n)$.
 
   したがって $n<=C^2$ なので, 以降 $n$ は素数とする.
 
   特に $phi(2)=1$ なので $n$ は奇素数である.
 
+  このとき, $display(2^(k-1)phi^k (n)=phi(n)product_(1<=j<k)product_(p | phi^j (n),p eq.not 2)(1-1/p)=n {product_(p | n, p eq.not 2)(1-1/p)}product_(1<=j<k)product_(p | phi^j (n),p eq.not 2)(1-1/p).)$
+
+  これは $overline(phi)^k (n)$ に等しく, よって $"co"phi^k (n)=n-overline(phi)^k (n)$ である.
   
   すると, 以下の命題 (\*) が証明できる:
 
@@ -425,7 +423,7 @@ $R_i (n)$ が1になるまでは $i$ について $R_i (n)$ が狭義単調減�
 
 この定理の条件「 $0<=j<min(I(n), k)$ の範囲のすべての整数 $j$ について $R_j (n)$ が奇素数」は $n>C^2$ が成り立つための必要条件であるが, 十分条件ではないことに注意.
 
-さて, $n>C^2, phi^k (n)>1$ が成り立つような $n$ で, $I(n)<k$ であるような $n$ は少ない.
+さて, $n>C^2, phi^(k-1) (n)>1$ が成り立つような $n$ で, $I(n)<k$ であるような $n$ は少ない.
 
 これについて考えよう.
 
@@ -437,7 +435,7 @@ $display(Y=2^(sum_(1<=k<=I(n))E_k (n)))$ とおくと, $n=C+Y$ より $n>C^2$ �
 
 さて, $n_(I(n)-1)=2^(E_(I(n)) (n))+1$ はフェルマ素数であるから, ここから $E_1(n), ..., E_(I(n)-1)(n)$ の組み合わせ, ひいては $n$ 自体も限定される.
 
-正確には, フェルマ素数が有限個しか存在しないと仮定したとき, $n>C^2, phi^k (n)>1, I(n)<k$ を満たす $n$ は($k$ を動かしても)有限個しかないことがわかる.
+正確には, フェルマ素数が有限個しか存在しないと仮定したとき, $n>C^2, phi^(k-1) (n)>1, I(n)<k$ を満たす $n$ は($k$ を動かしても)有限個しかないことがわかる.
 
 特に, フェルマ素数が現在知られている $2^2^0+1, 2^2^1+1, 2^2^2+1, 2^2^3+1, 2^2^4+1$ に限られると大胆に仮定すると, 条件を満たす $n$ と $k$ は以下のリストにあるもののみになる.
 
@@ -446,6 +444,7 @@ $display(Y=2^(sum_(1<=k<=I(n))E_k (n)))$ とおくと, $n=C+Y$ より $n>C^2$ �
     columns: 5,
     align: (right, right, right, right, right),
     table.header($n$, $I(n)$, $E_1 (n), ..., E_(I(n))(n)$, $"range of" k$, $C$),
+    $3$, $1$, $2$, $[2, 2]$, $1$,
     $5$, $1$, $2$, $[2, 2]$, $1$,
     $17$, $1$, $4$, $[2, 4]$, $1$,
     $257$, $1$, $8$, $[2, 8]$, $1$,
