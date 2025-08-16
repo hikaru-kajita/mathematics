@@ -86,7 +86,7 @@
 
 しかしここで, $1<=phi(n)<=n$ が成り立つことはもちろん, $1<=phi(m)d/phi(d)<=m$ も成り立ち, さらにこれは自然数である.
 
-したがって, $f([alpha_0, alpha_1, alpha_2])=[phi(alpha_0), phi(alpha_1)d/phi(d), phi(alpha_2)d'/phi(d')] "where" d=gcd(alpha_0, alpha_1), d'=gcd(alpha_0alpha_1, alpha_2)$ のような関数を定義すれば, $alpha=alpha_0alpha_1alpha_2$ について $f([alpha_0, alpha_1, alpha_2])=[alpha'_0, alpha'_1, alpha'_2], alpha'=alpha'_0alpha'_1alpha'_2$ とおいたとき $phi(alpha)=alpha'$ かつ各 $0<=i<=2$ について $alpha'_i<=alpha_i$ が成り立つ.
+したがって, $italic("totient_product")([alpha_0, alpha_1, alpha_2])=[phi(alpha_0), phi(alpha_1)d/phi(d), phi(alpha_2)d'/phi(d')] "where" d=gcd(alpha_0, alpha_1), d'=gcd(alpha_0alpha_1, alpha_2)$ のような関数を定義すれば, $alpha=alpha_0alpha_1alpha_2$ について $italic("totient_product")([alpha_0, alpha_1, alpha_2])=[alpha'_0, alpha'_1, alpha'_2], alpha'=alpha'_0alpha'_1alpha'_2$ とおいたとき $phi(alpha)=alpha'$ かつ各 $0<=i<=2$ について $alpha'_i<=alpha_i$ が成り立つ.
 
 よって $sqrt(N)$ 以下のすべての $n$ について $phi(n)$ を計算しておけば, 任意の $f_0, f_1, f_2<=sqrt(N)$ を満たす $n=f_0f_1f_2$ について $[f_0, f_1, f_2]$ に先の関数 $f$ を繰り返し適用することによって $phi(n), phi^2 (n), ...$ を計算することができる.
 
@@ -104,7 +104,7 @@ $f_0(n), f_1(n)<=sqrt(N)$ は定義上成り立っているから, $f_2(n)>sqrt(
 
 そこで, primechain という長さ $N$ の配列を用意する.
 
-区間篩が $sqrt(N)<["start", "end"]$ の区間で実行されているとすると, primechainの $["start"/2, "end"/2], ["start"/3, "end"/3], ["start"/4, "end"/4], ..., ["start"/sqrt(N), "end"/sqrt(N)]$ の部分をメモリマップする.
+区間篩が $sqrt(N)<["start", "end"]$ の区間で実行されているとすると, primechainの $["start"/2, "end"/2], ["start"/3, "end"/3], ["start"/4, "end"/4], ..., ["start"/sqrt(N), "end"/sqrt(N)]$ の部分をメモリマップする. (この方法をharmonic mapと呼ぶことにする.)
 
 $"start"<=n<="end"$ かつ $n$ が素数 (つまり$f_0(n)=f_1(n)=1$)であれば, $[f_0(n-1), f_1(n-1)]$ を$"primechain"[n]$ に記録する.
 
@@ -138,86 +138,49 @@ $phi^3 (n)$ を計算するためには, $f'_2-1$ の分解 $f'_2-1=f''_0f''_1f'
 
 $f'''$ を $f^((3))$, $f''''$ を $f^((4))$ などして表記すると, $phi^k (n)$ を計算するためには $f^((k-1))_0, f^((k-1))_1, f^((k-1))_2$ までが必要である.
 
-そこで, 順に $f_2, f'_2, ...$ の数列をつなげていき, 以下のように primechain に記録することで $O(k sqrt(N)log N)$ の空間計算量で計算する.
+ここで, $f_2^((i))$ は $n$ の約数ではないが, 実はある簡単に計算できる整数 $B_i=product_(m=1)^i f_0^((m))f_1^((m))$ を用いて $f_2^((i))=floor(n/B_i)$ と書けることが証明できる. (GPT-5との議論から発展.)
 
-なお, このとき primechain は $N times (k-1)$ の二次元配列 (要素は32ビット符号なし整数のペア)とし, $p_1>sqrt(N), f_2(p_1-1)<=sqrt(N), f_2(p_2-1)=p_1, f_2(p_3-1)=p_2, ...$ が成り立っているとする.
+つまり, $f_2$ だけでなく $f'_2, f''_2, ...$ はすべてharmonic mapの範囲に含まれているから, primechainのharmonic mapを $f'_0, f'_1, f'_2, f''_0, f''_1, f''_2, ...$ を取得する目的に使うことができる.
 
 #align(center)[
   #set text(size: 6pt)
   #diagram(
     debug: false,
-    spacing: (-1pt, -6pt),
-    node((0, 0), $i$, name: <i>),
-    node((1, 0), $"primechain"[i]$, name: <primechaini>),
-    node((0, 1), $p_1$, name: <p1>),
-    node((1, 1), $f_0(p_1-1) \ f_1(p_1-1)$, name: <p11>),
-    node((2, 1), $...$),
-    node((0, 2), $dots.v$),
-    node((1, 2), $dots.v$),
-    node((0, 3), $p_2$),
-    node((1, 3), $f_0(p_2-1) \ f_1(p_2-1)$, name: <p21>),
-    node((2, 3), $f_0(p_1-1) \ f_1(p_1-1)$, name: <p22>),
-    node((3, 3), $...$),
-    node((0, 4), $dots.v$),
-    node((1, 4), $dots.v$),
-    node((2, 4), $dots.v$),
-    node((0, 5), $p_3$),
-    node((1, 5), $f_0(p_3-1) \ f_1(p_3-1)$, name: <p31>),
-    node((2, 5), $f_0(p_2-1) \ f_1(p_2-1)$, name: <p32>),
-    node((3, 5), $f_0(p_1-1) \ f_1(p_1-1)$, name: <p33>),
-    node((0, 6), $dots.v$),
-    node((1, 6), $dots.v$),
-    node((2, 6), $dots.v$),
-    node((3, 6), $dots.v$),
-    node((0, 7), $dots.v$),
-    node((1, 7), $dots.v$, name: <pk-21>),
-    node((2, 7), $dots.v$, name: <pk-22>),
-    node((3, 7), $dots.v$),
-    node((0, 8), $p_(k-1)$),
-    node((1, 8), $f_0(p_(k-1)-1) \ f_1(p_(k-1)-1)$, name: <pk-11>),
-    node((2, 8), $f_0(p_(k-2)-1) \ f_1(p_(k-2)-1)$, name: <pk-12>),
-    node((3, 8), $f_0(p_(k-3)-1) \ f_1(p_(k-3)-1)$, name: <pk-13>),
-    node((4, 8), $...$),
-    node((5, 8), $f_0(p_2-1) \ f_1(p_2-1)$, name: <pk-1k-2>),
-    node((6, 8), $f_0(p_1-1) \ f_1(p_1-1)$, name: <pk-1k-1>),
-    node((0, 9), $dots.v$),
-    node((1, 9), $dots.v$),
-    node((2, 9), $dots.v$),
-    node((3, 9), $dots.v$),
-    node((4, 9), $dots.down$),
-    node((0, 10), $p_k$),
-    node((1, 10), $f_0(p_k-1) \ f_1(p_k-1)$, name: <pk1>),
-    node((2, 10), $f_0(p_(k-1)-1) \ f_1(p_(k-1)-1)$, name: <pk2>),
-    node((3, 10), $f_0(p_(k-2)-1) \ f_1(p_(k-2)-1)$, name: <pk3>),
-    node((4, 10), $...$),
-    node((5, 10), $f_0(p_3-1) \ f_1(p_3-1)$, name: <pkk-2>),
-    node((6, 10), $f_0(p_2-1) \ f_1(p_2-1)$, name: <pkk-1>),
-    node((0, 11), $dots.v$),
-    node((1, 11), $dots.v$),
-    node((2, 11), $dots.v$),
-    node((3, 11), $dots.v$),
-    node((4, 11), $dots.v$),
-    node((5, 11), $dots.v$),
-    node((6, 11), $dots.v$),
+    spacing: (20pt, 15pt),
+    node-inset: 2pt,
+    node((0, 0), $"primechain"[f_2]=(f'_0, f'_1)$, name: <pf0>),
+    node((1, 0), $f'_2$, name: <f1>),
+    node((3, 0), $"fallback to "italic("totient_product")$, name: <exit>),
+    node((0, 1), $"primechain"[f'_2]=(f''_0, f''_1)$, name: <pf1>),
+    node((1, 1), $f''_2$, name: <f2>),
+    node((0, 2), $"primechain"[f''_2]=(f'''_0, f'''_1)$, name: <pf2>),
+    node((1, 2), $f'''_2$, name: <f3>),
+    node((0, 3), $"primechain"[f'''_2]=(f^((4))_0, f^((4))_1)$, name: <pf3>),
+    node((1, 3), $f^((4))_2$, name: <f4>),
+    node((0, 3.7), $dots.v$),
+    node((1, 3.7), $dots.v$),
 
-    edge(<p11>, <p22>, "->", `copy`),
-    edge(<p21>, <p32>, "->", `copy`),
-    edge(<p22>, <p33>, "->", `copy`),
-    edge(<pk-21>, <pk-12>, "->", `copy`),
-    edge(<pk-22>, <pk-13>, "->", `copy`),
-    edge((4, 7), <pk-1k-2>, "->", `copy`),
-    edge((5, 7), <pk-1k-1>, "->", `copy`),
-    edge(<pk-11>, <pk2>, "->", `copy`),
-    edge(<pk-12>, <pk3>, "->", `copy`),
-    edge(<pk-1k-2>, <pkk-1>, "->", `copy`),
+    edge(<pf0>, <f1>, "=>", label: $"calc"$,),
+    edge(<f1>, <exit>, "->", label: $f'_2<=sqrt(N)$),
+
+    edge(<f1>, ((), "|-", (<f1>, 50%, <pf1>)), ((), "-|", <pf1>), <pf1>, "->", label: $"otherwise"$, label-side: center),
+    edge(<pf1>, <f2>, "=>", label: $"calc"$,),
+    edge(<f2>, ((), "-|", <exit>), <exit>, "->", label: $f''_2<=sqrt(N)$, label-pos: 0.25),
+
+    edge(<f2>, ((), "|-", (<f2>, 50%, <pf2>)), ((), "-|", <pf2>), <pf2>, "->", label: $"otherwise"$, label-side: center),
+    edge(<pf2>, <f3>, "=>", label: $"calc"$),
+    edge(<f3>, ((), "-|", <exit>), <exit>, "->", label: $f'''_2<=sqrt(N)$, label-pos: 0.25),
+
+    edge(<f3>, ((), "|-", (<f3>, 50%, <pf3>)), ((), "-|", <pf3>), <pf3>, "->", label: $"otherwise"$, label-side: center),
+    edge(<pf3>, <f4>, "=>", label: $"calc"$),
+    edge(<f4>, ((), "-|", <exit>), <exit>, "->", label: $f^((4))_2<=sqrt(N)$, label-pos: 0.25),
   )
 ]
 
-#highlight[全体の時間計算量は $O(k N log N)$, 空間計算量が $O(k sqrt(N) log N)$, 消費するディスクの容量が $O(k N)$ となる.]
-
 一般に $phi^k (n)=1$ となる最小の $k$ は $1+log_2 n$ であることが #cite(form: "prose", <pillai1929function>) によって示されているため, 実用上(オイラー関数の多重合成の性質を調べるという意味で)このアルゴリズムが使われるのは $k<=1+log_2 N$ の範囲のみである.
 
-よってこのアルゴリズムは十分高速である.
+これを考慮すると, #highlight[全体の時間計算量は $O(k N log N)$, 空間計算量が $O(sqrt(N)log N)$, 消費するディスクの容量が $O(k N)$] となって, これは十分高速である.
+
 
 = 最適化について
 
@@ -236,5 +199,9 @@ $f'''$ を $f^((3))$, $f''''$ を $f^((4))$ などして表記すると, $phi^k 
 今回のアルゴリズムはかなりオイラー関数固有の性質を活用しているため, 他に多重合成が研究されている乗法的関数 (約数の和関数など) にどこまで応用できるかはまだわかっていない.
 
 また, 同じ問題を解くアルゴリズムで, 時間と空間のトレードオフなしにこのアルゴリズムの計算量を改善することはできないと予想するが, これを解決するのはとても難しいと思われる.
+
+= リンク
+
+- 論文: #link("https://github.com/hikaru-kajita/mathematics")
 
 #bibliography("works.bib", style: "ieee", title: "参考文献")

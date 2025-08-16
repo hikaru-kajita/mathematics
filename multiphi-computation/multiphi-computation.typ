@@ -5,6 +5,7 @@
 #show: thmrules
 #let theorem = thmbox("theorem", "定理", padding: (top: 0em, bottom: 0em))
 #let lemma = thmbox("lemma", "補題", padding: (top: 0em, bottom: 0em))
+#let proposition = thmbox("proposition", "命題", padding: (top: 0em, bottom: 0em))
 #let definition = thmbox("definition", "定義", padding: (top: 0em, bottom: 0em))
 #let corollary = thmbox("corollary", "系", padding: (top: 0em, bottom: 0em))
 #let example = thmbox("example", "例", padding: (top: 0em, bottom: 0em))
@@ -91,6 +92,8 @@ $n$ について, $k+1$ 個の数からなる組 $(n, φ(n), ..., φ^k (n))$ を
 また, 異なる $N$ で実験したい場合があるため, ファイルの中の区間を参照するだけでよいように作成したメモリマップドファイルの中で $n$ は順番に並んでいることが望ましい.
 
 そして, ロード時には $[1, N]$ をRAMに収まる程度の長さに分割し, それぞれの区間について順にファイルの対応する区間をメモリにマップすることになる.
+
+本論文の中では $N$ は常に固定されているものとする.
 
 = $φ^1"-problem"$ について
 
@@ -314,7 +317,13 @@ $φ^2 (n)$ を効率的に計算することが可能である. 以下, その�
 
 これを利用して, $φ^2 (n)$ も列挙する区間篩内部のアルゴリズムは以下のように書くことができる.
 
-ただし, $sqrt(N)$ 以下の $n$ について $φ(n)$ の値を持つtotientsは, 区間篩の前計算でsmallprimesとともに計算しておき, また長さ $N$ の $"primechain"$ という配列を初期化しておく. (これはメモリマップして利用する.)
+ただし, $sqrt(N)$ 以下の $n$ について $φ(n)$ の値を持つtotientsは, 区間篩の前計算でsmallprimesとともに計算しておく.
+
+また長さ $N$ の $"primechain"$ という配列を初期化しておく. (これはメモリマップして利用する.)
+
+$"primechain"$ のそれぞれの要素は2つの32ビット符号なし整数を書くサイズがあり, 0で初期化されているものとする.
+
+(具体的には, $f_0$ と $f_1$ のペアを書き込み, $f_0, f_1<=sqrt(N)$ で $N$ は実用上 $2^64~10^19$ 未満としてよいので $f_0, f_1$ は32ビットに収まることになる.)
 
 #indentbox[
   $"low_start" <- "start"$
@@ -325,7 +334,7 @@ $φ^2 (n)$ を効率的に計算することが可能である. 以下, その�
 
   $f_1 <- [1, 1, ..., 1] #h(10pt) \/\/ "Length": "end"-"low_start"+1$
 
-  Memory-map interval $["start"/2, "end"/2], ["start"/3, "end"/3], ["start"/4, "end"/4], ..., ["start"/sqrt(N), "end"/sqrt(N)]$ of primechain
+  Memory-map interval $[floor("start"/2), floor("end"/2)], [floor("start"/3), floor("end"/3)], [floor("start"/4), floor("end"/4)], ..., [floor("start"/sqrt(N)), floor("end"/sqrt(N))]$ of primechain
 
   *for* $p$ *in* smallprimes: #indentbox[
     *for all* $m,$ *s.t.* $"low_start"<=m<="end"$ *and* $p | m$: #indentbox[
@@ -383,7 +392,7 @@ $φ^2 (n)$ を効率的に計算することが可能である. 以下, その�
 
 そして $f_0$ と $f_1$ の初期化は前回と同様である.
 
-その後, 長さ $N$ のディスク上にあるprimechainの配列の, $["start"/2, "end"/2], ["start"/3, "end"/3], ["start"/4, "end"/4], ..., ["start"/sqrt(N), "end"/sqrt(N)]$ の部分をメモリにマップする.
+その後, 長さ $N$ のディスク上にあるprimechainの配列の, $[floor("start"/2), floor("end"/2)], [floor("start"/3), floor("end"/3)], [floor("start"/4), floor("end"/4)], ..., [floor("start"/sqrt(N)), floor("end"/sqrt(N))]$ の部分をメモリにマップする. (このマップの方法と範囲のことをharmonic mapと呼ぶことにする.)
 
 調和級数の考え方より, この長さの合計は $O(("end"-"start")log N)$ 程度にしかならない.
 
@@ -429,11 +438,69 @@ $phi^3 (n)$ を計算するためには, $f'_2-1$ の分解 $f'_2-1=f''_0f''_1f'
 
 $f'''$ を $f^((3))$, $f''''$ を $f^((4))$ などして表記すると, $phi^k (n)$ を計算するためには $f^((k-1))_0, f^((k-1))_1, f^((k-1))_2$ までが必要である.
 
-$phi^k"-problem"$ のためのファイルをビルドするときの区間篩のアルゴリズムは以下のようになる.
+さて, アルゴリズムの議論のために2つ命題を証明しておく.
 
-なお, primechain は $N times (k-1)$ の二次元配列で, それぞれの要素は2つの32ビット符号なし整数を書くサイズがあり, 0で初期化されているものとする.
+#lemma[
+  $n, i$ を正整数とし, $f_2, f'_2, f''_2, ..., f^((i))_2$ がすべて $sqrt(N)$ より大きいとする.
 
-(具体的には, $f_0$ と $f_1$ のペアを書き込み, $f_0, f_1<=sqrt(N)$ で $N$ は実用上 $2^64~10^19$ 未満としてよいので $f_0, f_1$ は32ビットに収まることになる.)
+  $beta^((j)):=f^((j))_0f^((j))_1,B_j:=product_(m=1)^j beta^((j))$ とおくと $n=beta(f^((i))_2B_i+sum_(m=0)^(i-1)B_m)$.
+
+  なお $B_0$ は $1$ と定義する.
+]
+
+#proof[
+  $i$ についての帰納法で証明する.
+
+  $i=1$ の場合は $n=f_0 f_1 f_2=beta (1+f'_0 f'_1 f'_2)=beta(f'_2beta'+B_0)=beta(f'_2B_1+B_0)$ よりよい.
+
+  $i$ の場合について命題が成り立っていると仮定すると,
+
+  $n=beta(f_2^((i))B_i+sum_(m=0)^(i-1)B_m)=beta((1+beta^((i+1))f_2^((i+1)))B_i+sum_(m=0)^(i-1)B_m)=beta(f_2^((i+1))B_(i+1)+sum_(m=0)^i B_m)$ より $i+1$ の場合も成り立つ.
+]
+
+#theorem[
+  $n, i$ を正整数とし, $f_2, f'_2, f''_2, ..., f^((i))_2$ をすべて $sqrt(N)$ より大きい奇素数とする.
+
+  先の命題と同様に $beta^((i)), B_i$ を定義すると $f_2^((i))=floor(n/(beta B_i))$.
+]
+
+#proof[
+  $f_2^((i))=floor(n/(beta B_i))$ は $f_2^((i))=floor(f_2/B_i)$ と同値なので, これを証明する.
+
+  まず, 先の命題から $f_2=f_2^((i))B_i+sum_(m=0)^(i-1)B_m$ が得られた.
+
+  両辺を $B_i$ で割って $f_2/B_i=f_2^((i))+sum_(m=0)^(i-1)B_m/B_i$ を得る.
+
+  さて, 任意の $0<=m<i$ について, $B_(m+1)=beta^((m+1))B_m$ であるが, $f_2^((m))-1=beta^((m+1))f_2^((m+1))$ で $f_2^((m)), f_2^((m+1))$ は奇素数なので $beta^((m+1))$ は偶数で, これは $2$ 以上.
+
+  したがって任意の $0<=m<i$ について $B_(m+1)>=2 B_m$ である.
+
+  ここから $B_m/B_i=B_m/B_(m+1) dot B_(m+1)/B_(m+2) dot ... dot B_(i-1)/B_i<=(1/2)^(i-m)$ が従うので, $0<=sum_(m=0)^(i-1)B_m/B_i<=sum_(m=0)^(i-1)(1/2)^(i-m)<1$.
+
+  よって, $f_2^((i))<=f_2/B_i<f_2^((i))+1$ から, $f_2^((i))=floor(f_2/B_i)$ が示された.
+]
+
+さて, この定理の重要な点は, どんなに大きい $i$ を取ってきても, $f_2^((i))$ が $sqrt(N)$ より大きければ, $f_2^((i))$ は必ずharmonic mapの範囲に含まれているということである (このとき $beta B_i<=sqrt(N)$ は明らかであろう.)
+
+したがって, $phi^k (n)$ までを計算するために必要な情報は, すべて_totient-product_とprimechainのharmonic mapから得られることになる.
+
+#[
+  #set text(size: 8pt)
+
+  これはGPT-5との議論から発展した.
+
+  もともと筆者は $f_2^((i))$ はprimechainの範囲外であると思い込んでおり, そのため最初に考えていたアルゴリズムは各primechainの要素には長さ $k-1$ の配列を持たせておき, $f_2$ が区間に含まれているときに $f'_2$ のprimechainをコピーするという方法を取っていた.
+
+  そのため, 空間計算量は $O(k sqrt(N)log N)$ になっていた.
+
+  しかし, GPT-5 にそのアルゴリズムの概要を入力し, 発展のアイデアを出すよう指示したところ, GPT-5は $f_2^((i))$ が常にprimechainの範囲*内*にあると思い込んでおり (証明はなかったし, おそらく内部でも証明はしていないであろう), primechainの $f_2$ 番目には $f'_0, f'_1$ のみを書き, primechain全体を単連結リストの森のように扱うことを考案した.
+
+  筆者はこの議論から先の補題と定理に気づき, 現在のアルゴリズムを構築した.
+]
+
+以上を踏まえ, $phi^k"-problem"$ のためのファイルをビルドするときの区間篩のアルゴリズムを考えると以下のようになる.
+
+なお, primechain は $phi^2"-problem"$ のときと同様, 長さ $N$ の配列とする.
 
 #align(center)[
   #block[
@@ -481,11 +548,7 @@ $phi^k"-problem"$ のためのファイルをビルドするときの区間篩�
           ]
           
           *if* $f_0[n]=f_1[n]=1$: #h(10pt) \/\/ $n$ is a prime $>sqrt(N)$ #indentbox[
-            $"primechain"[n][0]<-[f_0[n-1], f_1[n-1]]$
-
-            *for* $i$ in 1...$k-2$: #indentbox[
-              $"primechain"[n][i]<-"primechain"[(n-1)/(f_0[n]f_1[n])][i-1]$
-            ]
+            $"primechain"[n]<-[f_0[n-1], f_1[n-1]]$
           ]
 
           $alpha^((i-1))<-f_0[n]f_1[n]$
@@ -497,7 +560,7 @@ $phi^k"-problem"$ のためのファイルをビルドするときの区間篩�
 
             *if* $i=k$: *break*
 
-            $[f_0^((i)), f_1^((i))]<-"primechain"[f_2][i-1]$
+            $[f_0^((i)), f_1^((i))]<-"primechain"[f_2^((i-1))]$
 
             $f_2^((i))<- (f_2^((i-1))-1)/(f_0^((i))f_1^((i)))$
 
@@ -523,9 +586,13 @@ $phi^k"-problem"$ のためのファイルをビルドするときの区間篩�
   ]
 ]
 
-一つの区間について, 空間計算量はprimechainの読み込みがボトルネックで $O(("end"-"start")k log N)$, 時間計算量は $O(("end"-"start")(k+log log N))$.
+$k=O(log N)$ に注意すると, 一つの区間について, 空間計算量は $O(("end"-"start")k log N)$, 時間計算量は $O(("end"-"start")(k+log log N))$.
 
-全体のビルドのアルゴリズムについては, 空間計算量が $O(k sqrt(N) log N)$, 時間計算量が $O(k N log N)$, 必要なディスクの容量は $O(k N).$
+全体のビルドのアルゴリズムについては, 区間の長さを $sqrt(N)$ 程度とすると空間計算量が $O(sqrt(N)log N)$, 時間計算量が $O(k N log N)$ ($gcd$ の計算がボトルネック), 必要なディスクの容量は $O(k N)$.
+
+なお, ルックアップテーブルを作らず, 単一の $phi^k"-problem"$ のみを計算するアルゴリズムも考えられる.
+
+その場合, 時間・空間計算量は変わらないが, ディスクに置くのが長さ $N$ のprimechainのみでよくなり, $O(N)$ で済む.
 
 = 各種最適化
 
@@ -629,5 +696,5 @@ $S={p_0, p_1, ..., p_(m-1)} union {n | n>p_(m-1), gcd(n, P)=1}$ とおけば, $S
   ]
 ]
 
-これを利用すると, 全体の空間計算量を $O((k sqrt(N) log N)/(log log N))$, 必要なディスクの容量を $O((k N)/(log log N))$ に抑えられる.
+これを利用すると, 全体の空間計算量を $O((sqrt(N)log N)/(log log N))$, 必要なディスクの容量を $O((k N)/(log log N))$ に抑えられる.
 
