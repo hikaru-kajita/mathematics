@@ -202,6 +202,6 @@ $f'''$ を $f^((3))$, $f''''$ を $f^((4))$ などして表記すると, $phi^k 
 
 = リンク
 
-- 論文: #link("https://github.com/hikaru-kajita/mathematics")
+- 論文: #link("https://github.com/hikaru-kajita/mathematics/tree/main/multiphi-computation")
 
 #bibliography("works.bib", style: "ieee", title: "参考文献")
