@@ -67,8 +67,8 @@ $ cases(
 #theorem[
   ダブルB型解の係数と平行移動 $alpha, beta$ と $m$ は以下のいずれかを満たす.
 
-  - $display(alpha=1\, beta=2^e h^f\, m=(h+1-2^e sub(h)h^f)/(h+1))$
-  - $alpha=2^e, beta=h^f, m=-sub(h)h^f-h 2^e+h$
+  - $display(alpha=1\, beta=2^e h^f\, m=(-h-1-2^e sub(h)h^f)/(h+1))$
+  - $alpha=2^e, beta=h^f, m=-sub(h)h^f-h 2^e+sub(h)$
   - $alpha=h^f, beta=2^e, m=-2h^f-2^e+1$
 ]
 
@@ -114,7 +114,7 @@ $ cases(
       sub(h)2^e h^f sub(q)&=2h p+2h m &&... (upright(B)) times 2h
     $
 
-    したがって, $sub(h)2^e h^f=-2h-(h+1)m+sub(h)$ より, $display(m=(h+1-sub(h)2^e h^f)/(h+1))$ を得る.
+    したがって, $sub(h)2^e h^f=-2h-(h+1)m+sub(h)$ より, $display(m=(-h-1-sub(h)2^e h^f)/(h+1))$ を得る.
   ]
 
   (2) $alpha=2^e, beta=h^f$ の場合
@@ -125,7 +125,7 @@ $ cases(
       sub(h)h^f sub(q)&=h 2^e p+h m &&... (upright(B)) times 2h
     $
 
-    したがって, $sub(h)h^f=-h 2^e-m+sub(h)$ より, $m=-sub(h)h^f-h 2^e+h$.
+    したがって, $sub(h)h^f=-h 2^e-m+sub(h)$ より, $m=-sub(h)h^f-h 2^e+sub(h)$.
   ]
 
   (3) $alpha=h^f, beta=2^e$ の場合
