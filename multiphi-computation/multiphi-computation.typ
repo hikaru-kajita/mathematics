@@ -516,7 +516,7 @@ $f'''$ を $f^((3))$, $f''''$ を $f^((4))$ などして表記すると, $phi^k 
 
         $f_1 <- [1, 1, ..., 1] #h(10pt) \/\/ "Length": "end"-"low_start"+1$
 
-        Memory-map interval $["start"/2, "end"/2], ["start"/3, "end"/3], ["start"/4, "end"/4], ..., ["start"/sqrt(N), "end"/sqrt(N)]$ of primechain
+        Memory-map interval $[floor("start"/2), floor("end"/2)], [floor("start"/3), floor("end"/3)], [floor("start"/4), floor("end"/4)], ..., [floor("start"/sqrt(N)), floor("end"/sqrt(N))]$ of primechain
 
         *for* $p$ *in* smallprimes: #indentbox[
           *for all* $m,$ *s.t.* $"low_start"<=m<="end"$ *and* $p | m$: #indentbox[
@@ -648,7 +648,8 @@ $k=O(log N)$ に注意すると, 一つの区間について, 空間計算量は
 
 したがって, 単純な効率化のアイデアとしては, primechainの2以上の偶数の部分を省くということである.
 
-このとき, $"compress"(n):=ceil(n / 2)$ のように定義した関数を用いて, primechainの長さを $"compress"(N)+1$ に設定, 区間 $["start", "end"]$ を計算するときのメモリマップする範囲を $["start"/2, "end"/2], ["start"/3, "end"/3], ..., ["start"/sqrt(N), "end"/sqrt(N)]$ から $["compress"("start")/2, "compress"("end")/2], ["compress"("start")/3, "compress"("end")/3], ..., ["compress"("start")/sqrt(N), "compress"("end")/sqrt(N)]$ に変更し, すべてのアクセス $"primechain"[p]$ を $"primechain"["compress"(p)]$ に置き換えることができる.
+このとき, $"compress"(n):=ceil(n / 2)$ のように定義した関数を用いて, primechainの長さを $"compress"(N)+1$ に設定, 区間 $["start", "end"]$ を計算するときのメモリマップする範囲を $[floor("start"/2), floor("end"/2)], [floor("start"/3), floor("end"/3)], ..., [floor("start"/sqrt(N)), floor("end"/sqrt(N))]$ から \
+$[floor("compress"("start")/2), floor("compress"("end")/2)], ..., [floor("compress"("start")/sqrt(N)), floor("compress"("end")/sqrt(N))]$ に変更し, すべてのアクセス $"primechain"[p]$ を $"primechain"["compress"(p)]$ に置き換えることができる.
 
 すると, primechainに必要な長さや空間計算量はほぼ半分に削減できる.
 
