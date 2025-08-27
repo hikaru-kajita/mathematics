@@ -1,3 +1,5 @@
+#import "@preview/cades:0.3.0": qr-code
+
 #let smallspace = [#h(4pt)];
 #let even = [even];
 #let odd = [odd];
@@ -136,6 +138,13 @@
   => ディスク容量 $O(k N)$, 空間計算量 $O(sqrt(N)log N)$ で計算ができる.
 ]
 
+#page[
+  == 詳細な議論
+
+  #qr-code("https://github.com/hikaru-kajita/mathematics/tree/main/multiphi-computation")
+
+  #link("https://github.com/hikaru-kajita/mathematics/tree/main/multiphi-computation")
+]
 
 #page(footer: none, background: none)[
   #align(center + horizon)[
