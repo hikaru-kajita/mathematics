@@ -3,15 +3,20 @@
 #import "@preview/cetz:0.3.1"
 #import "@preview/cetz-plot:0.1.0"
 #import "@preview/fletcher:0.5.2" as fletcher: diagram, node, edge
+#import "@preview/cades:0.3.0": qr-code
+#import "@preview/wrap-it:0.1.1": wrap-content
 
 #set text(
   font: ("Harano Aji Gothic"),
-  size: 7pt
+  size: 7.3pt
 )
 
-#set par(leading: 0.6em, spacing: 0.7em)
+#let secondary_color = rgb("#4285f4")
 
-#show heading: set text(size: 12pt)
+#set par(leading: 0.6em, spacing: 0.65em)
+#show link: set text(secondary_color)
+
+#show heading: set text(size: 11pt)
 
 #let page_margin = 1.5cm
 
@@ -22,7 +27,7 @@
     width: 100% - page_margin,
     height: 100% - page_margin, 
     radius: 4%, 
-    stroke: stroke(rgb("#4285f4"))),
+    stroke: stroke(secondary_color)),
   columns: 2,
 )
 
@@ -36,8 +41,10 @@
 
 #let smallspace = [#h(4pt)];
 
+#let prime = $"prime"$
+
 #let highlight(body) = {
-  set text(rgb("#4285f4"))
+  set text(secondary_color)
   [#body]
 }
 
@@ -60,13 +67,13 @@
 
 = 概要
 
-オイラー関数 $phi(n)$ の研究では, オイラー関数を含む方程式の解を研究する.
+オイラー関数 $phi(n)$ の研究では, $phi(n)$ を含む方程式の解を研究する.
 
-特に最近はオイラー関数の多重合成 $phi^k (n):=underbrace(phi\(...phi, k "times")(n)...)$ についての研究が進み, これを含む方程式の解を数値計算によって求めたい場面が多い.
+特に最近はオイラー関数の多重合成 $phi^k (n):=underbrace(phi\(...phi, k "times")(n)...)$ の研究が進み, これを含む方程式の解を数値計算によって求めたい場面が多い.
 
 しかし, $phi^k (n)$ は乗法的関数ではないので, 一般的に知られている区間篩をそのまま適用することができない.
 
-そこで今回, 3つのアイデアを含む新しいアルゴリズムを発見し, Rustで実装した.
+そこで, 今回3つのアイデアから新しいアルゴリズムを作り, Rustで実装した.
 
 以下, 正整数 $k, N$ を固定し, $1<=n<=N$ のすべての $n$ に対して $n$ の素因数分解と $phi(n), phi^2 (n), ..., phi^k (n)$ が(メモリマップを用いて)高速に取得できるようなLUTをディスク上に構築するアルゴリズムについて考える.
 
@@ -74,11 +81,7 @@
 
 前回の発表では部分分解というアイデアを提案した.
 
-これは正整数 $n<=N$ に対して $n=p_0p_1...p_(m-1) smallspace (p_i:"prime", p_i<=p_(i+1)), i_0=max {0<=i<=m | product_(0<=j<i)p_j<=sqrt(N)}, i_1=max {i_0<=i<=m | product_(i_0<=j<i)p_j<=sqrt(N)}$ とおいたとき, $f_0=product_(0<=j<i_0)p_j, f_1=product_(i_0<=j<i_1)p_j, f_2=n/(f_0f_1)$ として $n=f_0f_1f_2$ という形に書き表す方法である.
-
-これは区間篩内で計算量の大幅な悪化なしに計算することができる.
-
-前回, このような表し方がメモリマップする区間を $O(sqrt(N))$ に抑えつつ素因数分解を取得するのに有用ということを示した.
+これは正整数 $n<=N$ に対して $n=p_0p_1...p_(m-1) smallspace (p_i:"prime", p_i<=p_(i+1)), i_0=max {0<=i<=m | product_(0<=j<i)p_j<=sqrt(N)}, i_1=max {i_0<=i<=m | product_(i_0<=j<i)p_j<=sqrt(N)}$ とおいたとき, $f_0=product_(0<=j<i_0)p_j, f_1=product_(i_0<=j<i_1)p_j, f_2=n/(f_0f_1)$ として $n=f_0f_1f_2$ という形に書き表す方法であり, これがメモリマップする区間を $O(sqrt(N))$ に抑えつつ素因数分解を取得するのに有用ということを示した.
 
 しかし今回, これが $phi^k (n)$ を計算する際にも有用であることがわかった.
 
@@ -94,25 +97,25 @@
 
 まず $k=2$, つまり $phi(n), phi^2 (n)$ までしか計算しなくてよい場合を考える.
 
-$n=f_0(n)f_1(n)f_2(n)$ とおいたとき, $f_0(n), f_1(n), f_2(n)<=sqrt(N)$ ならば計算できることは先程示した.
+$n$ の部分分解を $n=f_0f_1f_2$ とおいたとき, $f_0, f_1, f_2<=sqrt(N)$ ならば計算できることは先程示した.
 
-$f_0(n), f_1(n)<=sqrt(N)$ は定義上成り立っているから, $f_2(n)>sqrt(N)$ の場合を考える.
+$f_0, f_1<=sqrt(N)$ は定義から直ちに従うので, $f_2>sqrt(N)$ の場合を考える.
 
-前回示した定理より, $f_2(n)$ は素数であるから, $alpha=f_0f_1<=sqrt(N)$ とおくと $phi(n)=phi(alpha)(f_2(n)-1)$.
+前回示した定理より, $f_2$ は素数であるから, $alpha=f_0f_1<=sqrt(N)$ とおくと $phi(n)=phi(alpha)(f_2-1)$.
 
-ここから $phi^2 (n)$ を計算するには $f_2(n)-1$ の分解の情報が必要である.
+ここから $phi^2 (n)$ を計算するには $f_2-1$ の分解の情報が必要である.
 
 そこで, primechain という長さ $N$ の配列を用意する.
 
 区間篩が $sqrt(N)<["start", "end"]$ の区間で実行されているとすると, primechainの $["start"/2, "end"/2], ["start"/3, "end"/3], ["start"/4, "end"/4], ..., ["start"/sqrt(N), "end"/sqrt(N)]$ の部分をメモリマップする. (この方法をharmonic mapと呼ぶことにする.)
 
-$"start"<=n<="end"$ かつ $n$ が素数 (つまり$f_0(n)=f_1(n)=1$)であれば, $[f_0(n-1), f_1(n-1)]$ を$"primechain"[n]$ に記録する.
+$"start"<=n<="end"$ かつ $n$ が素数 (つまり$f_0=f_1=1$)であれば, $n-1=f_2-1=f'_0f'_1f'_2$ と部分分解したときの $[f'_0, f'_1]$ を $"primechain"[n]$ に記録する.
 
-その後, $f_2(n)>sqrt(N)$ で関数 $f$ の繰り返しによって $phi^2 (n)$ を計算できない場合, $"primechain"[f_2(n)]$ から $[f_0(f_2(n)-1), f_1(f_2(n)-1)]$ を取得.
+その後, $f_2>sqrt(N)$ で $italic("totient_product")$ の繰り返しによって $phi^2 (n)$ を計算できない場合, $"primechain"[f_2]$ から $f_2-1=f'_0f'_1f'_2$ と部分分解したときの $[f'_0, f'_1]$ を取得.
 
-$f_2(f_2(n)-1)$ がそこから計算でき, これが $sqrt(N)$ 以下なら $phi(n)$ は $phi(alpha) dot f_0(f_2(n)-1) dot f_1(f_2(n)-1) dot f_2(f_2(n)-1)$ と $sqrt(N)$ 以下の正整数の積で表せる.
+$f'_2$ がそこから計算でき, これが $sqrt(N)$ 以下なら $phi(n)$ は $phi(alpha) dot f'_0 dot f'_1 dot f'_2$ と $sqrt(N)$ 以下の正整数の積で表せる.
 
-そうでなければ, $f_2(f_2(n)-1)$ は素数なので $phi(n)=phi(phi(alpha) dot f_0(f_2(n)-1) dot f_1(f_2(n)-1)) dot (f_2(f_2(n)-1)-1)$ と計算すればよい.
+そうでなければ, $f'_2$ は素数なので $phi(n)=phi(phi(alpha) dot f'_0 dot f'_1) dot (f'_2-1)$ と計算すればよい.
 
 ここでメモリマップする範囲は調和級数の発散する速度より $O(("end"-"start")log N)$ 程度にしかならず, 区間の大きさを $sqrt(N)$ 程度にとれば全体を通しての空間計算量は $O(sqrt(N)log N)$ ですむ.
 
@@ -120,25 +123,17 @@ $f_2(f_2(n)-1)$ がそこから計算でき, これが $sqrt(N)$ 以下なら $p
 
 まず, $n$ の分解 $n=f_0f_1f_2$ を考える.
 
-もし $f_2<=sqrt(N)$ であれば, $[f_0, f_1, f_2]$ に $f$ を繰り返し適用し続ければよい.
+そして, $f_2>sqrt(N)$ (ここから $f_2:prime$ が従う) のときのみ $f_2-1$ の部分分解を $f_2-1=f'_0f'_1f'_2$ と書く.
 
-それ以外の場合, $alpha=f_0f_1$ とおくと $alpha=n/f_2<N/sqrt(N)=sqrt(N)$ で, $phi(n)=phi(alpha f_2)=phi(alpha)(f_2-1)$ である.
+さらに, $f'_2>sqrt(N)$ (ここから $f'_2:prime$ が従う) のときのみ $f'_2-1$ の部分分解を $f'_2-1=f''_0f''_1f''_2$ と書く.
 
-$phi^2 (n)$ を計算するためには, $f_2-1$ の分解 $f_2-1=f'_0f'_1f'_2$ が必要である.
+これを繰り返していき, $f''', f'''', ...$ を $f^((3)), f^((4)), ...$ と書くことにしよう.
 
-もし $f'_2<=sqrt(N)$ であれば, $phi(n)=phi(alpha)f'_0f'_1f'_2$ は $sqrt(N)$ 以下の正整数の積で書けるから $f$ を繰り返し適用すればよい.
+さて, $phi(n)$ の計算には $n$ の部分分解 $f_0f_1f_2$ が必要で, $phi^2 (n)$ の計算には $f_2-1$ の部分分解 $f'_0f'_1f'_2$ が必要である.
 
-それ以外の場合, $alpha'=phi(alpha)f'_0f'_1$ とおくと $k'=phi(n)/f'_2<n/sqrt(N)<=N/sqrt(N)=sqrt(N)$ で, $phi^2 (n)=phi(alpha')(f'_2-1)$.
+厳密な議論は論文に書かれているが, $phi^3 (n)$ の計算には $f'_2-1$ の部分分解 $f''_0f''_1f''_2$ が必要となり, 一般に $phi^k (n)$ の計算には $f^((k-1))_0, f^((k-1))_1, f^((k-1))_2$ までが必要である.
 
-$phi^3 (n)$ を計算するためには, $f'_2-1$ の分解 $f'_2-1=f''_0f''_1f''_2$ が必要である.
-
-もし $f''_2<=sqrt(N)$ であれば, $phi^2 (n)=phi(alpha')f''_0f''_1f''_2$ は $sqrt(N)$ 以下の正整数の積で書けるから $f$ を繰り返し適用すればよい.
-
-それ以外の場合, $alpha''=phi(alpha')f''_0f''_1f''_2$ とおくと $alpha''=(phi^2 (n))/f''_2<n/sqrt(N)<=N/sqrt(N)=sqrt(N)$ で, $phi^3 (n)=phi(alpha'')(f''_2-1)$.
-
-$f'''$ を $f^((3))$, $f''''$ を $f^((4))$ などして表記すると, $phi^k (n)$ を計算するためには $f^((k-1))_0, f^((k-1))_1, f^((k-1))_2$ までが必要である.
-
-ここで, $f_2^((i))$ は $n$ の約数ではないが, 実はある簡単に計算できる整数 $B_i=product_(m=1)^i f_0^((m))f_1^((m))$ を用いて $f_2^((i))=floor(n/B_i)$ と書けることが証明できる. (GPT-5との議論から発展.)
+ここで, $f_2^((i))$ は $n$ の約数ではないものの, 実はある簡単に計算できる整数 $B_i=product_(m=1)^i f_0^((m))f_1^((m))$ を用いて $f_2^((i))=floor(n/B_i)$ と書けることが証明できる. (GPT-5との議論から発展, どのようにGPT-5が貢献したかは論文を参照のこと.)
 
 つまり, $f_2$ だけでなく $f'_2, f''_2, ...$ はすべてharmonic mapの範囲に含まれているから, primechainのharmonic mapを $f'_0, f'_1, f'_2, f''_0, f''_1, f''_2, ...$ を取得する目的に使うことができる.
 
@@ -177,7 +172,7 @@ $f'''$ を $f^((3))$, $f''''$ を $f^((4))$ などして表記すると, $phi^k 
   )
 ]
 
-一般に $phi^k (n)=1$ となる最小の $k$ は $1+log_2 n$ であることが #cite(form: "prose", <pillai1929function>) によって示されているため, 実用上(オイラー関数の多重合成の性質を調べるという意味で)このアルゴリズムが使われるのは $k<=1+log_2 N$ の範囲のみである.
+一般に $phi^k (n)=1$ となる最小の $k$ は $1+log_2 n$ で抑えられることが #cite(form: "prose", <pillai1929function>) によって示されているため, 実用上(オイラー関数の多重合成の性質を調べるという意味で)このアルゴリズムが使われるのは $k<=1+log_2 N$ の範囲のみである.
 
 これを考慮すると, #highlight[全体の時間計算量は $O(k N log N)$, 空間計算量が $O(sqrt(N)log N)$, 消費するディスクの容量が $O(k N)$] となって, これは十分高速である.
 
@@ -198,10 +193,19 @@ $f'''$ を $f^((3))$, $f''''$ を $f^((4))$ などして表記すると, $phi^k 
 
 今回のアルゴリズムはかなりオイラー関数固有の性質を活用しているため, 他に多重合成が研究されている乗法的関数 (約数の和関数など) にどこまで応用できるかはまだわかっていない.
 
-また, 同じ問題を解くアルゴリズムで, 時間と空間のトレードオフなしにこのアルゴリズムの計算量を改善することはできないと予想するが, これを解決するのはとても難しいと思われる.
+また，本アルゴリズムを，時間計算量・空間計算量・ディスク使用量のいずれも悪化させずにさらに改善するのは困難に思われるが，この意味での最適性を示す厳密な証明または反例は現時点では得られていない.
 
 = リンク
 
-- 論文: #link("https://github.com/hikaru-kajita/mathematics/tree/main/multiphi-computation")
+#wrap-content(
+  align: right,
+  figure(
+    placement: none,
+    qr-code("https://github.com/hikaru-kajita/mathematics/tree/main/multiphi-computation", width: 80pt)
+  ),
+  [
+    論文: #link("https://github.com/hikaru-kajita/mathematics/tree/main/multiphi-computation")
+  ]
+)
 
 #bibliography("works.bib", style: "ieee", title: "参考文献")
