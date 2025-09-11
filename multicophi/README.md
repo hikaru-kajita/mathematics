@@ -6,3 +6,5 @@ I considered about the more general $\mathrm{co}\varphi^k$ in 2023.10.08, but I 
 This caused the paper written around that period to be complex, hard to understand and incomplete.
 
 I realised this could be improved later by focusing on $n\leq C^2$, and the complete formulation and strict proof was done in 2025.08.05.
+
+Update 2025.09.11: Added some fixes and made the condition for $\mathrm{co}\varphi^k (n)\leq 0$ stricter
