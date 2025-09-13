@@ -81,7 +81,7 @@ $ cases(p{phi(A)-m}=a, 2phi(a)=(A-m-1)(p-1)) $ <def-partialmult>
   $m:even$ のとき, 部分乗数付きオイラー型メルセンヌ完全数は
 
   - $a=2^e p^f, A=2^e p^(f-1)+m+1:prime$
-  - $M=1-m$ とおいたとき, $M>0$ で, $M-2phi(M)=1, p cancel(divides) M$ を満たし, $a=p M, A=1$.
+  - $M=1-m$ とおいたとき, $M>0$ で, $M-2phi(M)=1, p divides.not M$ を満たし, $a=p M, A=1$.
 ]
 
 $phi(n) divides n-1$ を満たす合成数 $n$ は存在しないとするのが Lehmer's totient problemで, これが正しければ $M-2phi(M)=1$ に解は存在しない.
@@ -99,7 +99,7 @@ $phi(n) divides n-1$ を満たす合成数 $n$ は存在しないとするのが
 
   ここで $p | M$ とすると, $p^2 | a$ より $p | 2phi(a)$ となるが, これは $2phi(a)=-m(p-1)=(M-1)(p-1)$ に矛盾.
 
-  したがって $p cancel(divides) M$ で, $phi(a)=phi(p)phi(M)=(p-1)phi(M)$ より, $2phi(a)=2(p-1)phi(M)=(M-1)(p-1)$.
+  したがって $p divides.not M$ で, $phi(a)=phi(p)phi(M)=(p-1)phi(M)$ より, $2phi(a)=2(p-1)phi(M)=(M-1)(p-1)$.
 
   よって $2phi(M)=M-1$, つまり $M-2phi(M)=1$.
 
@@ -125,7 +125,7 @@ $phi(n) divides n-1$ を満たす合成数 $n$ は存在しないとするのが
 
   したがって, $display(phi(L)/L=(2^e phi(L))/(2^e L)=((A-m-1)(p-1))/(p{phi(A)-m}))$.
 
-  さて, $2^e L=p{phi(A)-m}$ より $L$ は $p$ の倍数で, $L=p^f M smallspace (f>0, p cancel(divides) M)$ と書ける.
+  さて, $2^e L=p{phi(A)-m}$ より $L$ は $p$ の倍数で, $L=p^f M smallspace (f>0, p divides.not M)$ と書ける.
 
   このとき, $display(phi(L)/L=(p^(f-1)(p-1)phi(M))/(p^f M)=(p-1)/p dot phi(M)/M)$ より, $display(phi(M)/M=(A-m-1)/(phi(A)-m))$.
 
@@ -171,7 +171,7 @@ $phi(n) divides n-1$ を満たす合成数 $n$ は存在しないとするのが
 ]
 
 #proof[
-  定義式より $p divides a$ なので, $a=p^f M smallspace (p cancel(divides) M, f>0$ とおける.
+  定義式より $p divides a$ なので, $a=p^f M smallspace (p divides.not M, f>0$ とおける.
 
   これを定義式に代入すると $phi(A)-m=p^(f-1)M, 2p^(f-1)phi(M)=A-m-1$ が得られる.
 
@@ -198,7 +198,7 @@ $phi(n) divides n-1$ を満たす合成数 $n$ は存在しないとするのが
 
 しかし, 個別の $m$ についてであれば解くことはできる.
 
-いま, $a=p^f M smallspace (p cancel(divides) M)$ を代入すると $phi(A)-m=p^(f-1)M, 2p^(f-1)phi(M)=A-m-1$ が得られる.
+いま, $a=p^f M smallspace (p divides.not M)$ を代入すると $phi(A)-m=p^(f-1)M, 2p^(f-1)phi(M)=A-m-1$ が得られる.
 
 さて, 二番目の式から $A:even=2^e L smallspace (e>0,L:odd)$ と書ける.
 

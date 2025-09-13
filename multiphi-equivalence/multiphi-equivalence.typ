@@ -177,8 +177,8 @@ $display(phi'(n)=product_(p^e || n)(p-1)^e)$ とも書けることから, $phi'$
 #lemma[
   $n, m, i$ を正整数, $p$ を素数とする.
 
-  $p | n, p cancel(divides) m, p cancel(divides) phi^i (n), p | phi^i (m)$ が成り立つならば, ある素数 $q>p$ と $0<=j<i$ を満たす整数 $j$ で, \
-  $q cancel(divides) phi^j (n)$ かつ $q | phi^j (m)$ を満たすものが存在する.
+  $p | n, p divides.not m, p divides.not phi^i (n), p | phi^i (m)$ が成り立つならば, ある素数 $q>p$ と $0<=j<i$ を満たす整数 $j$ で, \
+  $q divides.not phi^j (n)$ かつ $q | phi^j (m)$ を満たすものが存在する.
 ] <supplylemma>
 
 #[
@@ -191,7 +191,7 @@ $phi(n)$ は各 $p^e || n$ について $p^(e-1)(p-1)$ の積である.
 
 ここで"供給"される $p$ のべきは $q$ の指数によらない.
 
-いまの設定では, 最初 $p | n, p cancel(divides) m$ で $m$ より $n$ のほうが $p$ を多く含んでいたにも関わらず, $i$ 回 $phi$ を適用したらそれが入れ替わった.
+いまの設定では, 最初 $p | n, p divides.not m$ で $m$ より $n$ のほうが $p$ を多く含んでいたにも関わらず, $i$ 回 $phi$ を適用したらそれが入れ替わった.
 
 ということは, どこかで $phi^j (n)$ には含まれない $q$ が $phi^j (m)$ に含まれており, その $q$ が $p$ (のべき) を $m$ 側に供給したに違いない, というのが筆者の考えるこの補題の感覚的な説明である.
 
@@ -204,7 +204,7 @@ $phi(n)$ は各 $p^e || n$ について $p^(e-1)(p-1)$ の積である.
 
   このとき, すべての $0<=j<=i$ について $nu_p (phi^j (n))>=nu_p (phi^j (m))$ が成り立ってしまうことを帰納法で示す.
 
-  まず, $j=0$ のときは $p | n, p cancel(divides) m$ から $nu_p (phi^j (n))>=1, nu_p (phi^j (m))=0$ よりよい.
+  まず, $j=0$ のときは $p | n, p divides.not m$ から $nu_p (phi^j (n))>=1, nu_p (phi^j (m))=0$ よりよい.
 
   次に, $0<=j=k<i$ のとき $nu_p (phi^k (n))>=nu_p (phi^k (m))$ を仮定しよう. (目標は, $nu_p (phi^(k+1) (n))>=nu_p (phi^(k+1) (m))$ を示すことである.)
 
@@ -243,9 +243,9 @@ $phi(n)$ は各 $p^e || n$ について $p^(e-1)(p-1)$ の積である.
 
   以上より, $nu_p (phi^(k+1) (n))>=nu_p (phi^(k+1) (m))$ が示せたので, 帰納法よりすべての $0<=j<=i$ について $nu_p (phi^j (n))>=nu_p (phi^j (m)).$
 
-  特に $j=i$ の場合 $nu_p (phi^i (n))>=nu_p (phi^i (m))$ だが, これは $p cancel(divides) phi^i (n), p | phi^i (m)$ というもとの設定に矛盾.
+  特に $j=i$ の場合 $nu_p (phi^i (n))>=nu_p (phi^i (m))$ だが, これは $p divides.not phi^i (n), p | phi^i (m)$ というもとの設定に矛盾.
 
-  したがって背理法より, ある素数 $q>p$ と $0<=j<i$ を満たす整数 $j$ で, $q cancel(divides) phi^j (n)$ かつ $q | phi^j (m)$ を満たすものが存在する.
+  したがって背理法より, ある素数 $q>p$ と $0<=j<i$ を満たす整数 $j$ で, $q divides.not phi^j (n)$ かつ $q | phi^j (m)$ を満たすものが存在する.
 ]
 
 #theorem[
@@ -267,21 +267,21 @@ $phi(n)$ は各 $p^e || n$ について $p^(e-1)(p-1)$ の積である.
 
   つまり, 一方の素因子ではなく, もう一方の素因子であるような素数 $p_1$ が存在する.
 
-  今回条件は $n$ と $m$ について対称なので, 適切に入れ替えて $p_1 | n$ かつ $p_1 cancel(divides) m$ としよう.
+  今回条件は $n$ と $m$ について対称なので, 適切に入れ替えて $p_1 | n$ かつ $p_1 divides.not m$ としよう.
 
   ここで, 式 $(*)$ において, 根基が無平方数であることから, 任意の素数 $p$ について, $0<=i<k$ の範囲で $p | phi^i (n)$ を満たす $i$ の個数と, $p | phi^i (m)$ を満たす $i$ の個数は一致していなければならない.
 
-  いま $p_1 | n$ かつ $p_1 cancel(divides) m$ より, ある $0<i_1<k$ の範囲の $i_1$ で $p_1 cancel(divides) phi^(i_1) (n)$ かつ $p_1 | phi^(i_1) (m)$ を満たすものが存在する.
+  いま $p_1 | n$ かつ $p_1 divides.not m$ より, ある $0<i_1<k$ の範囲の $i_1$ で $p_1 divides.not phi^(i_1) (n)$ かつ $p_1 | phi^(i_1) (m)$ を満たすものが存在する.
 
-  @supplylemma より, ある素数 $p_2>p_1$ と $0<=i_2<i_1$ を満たす整数 $i_2$ で, $p_2 cancel(divides) phi^(i_2) (n)$ かつ $p_2 | phi^(i_2) (m)$ を満たすものが存在する.
+  @supplylemma より, ある素数 $p_2>p_1$ と $0<=i_2<i_1$ を満たす整数 $i_2$ で, $p_2 divides.not phi^(i_2) (n)$ かつ $p_2 | phi^(i_2) (m)$ を満たすものが存在する.
 
-  さて, さらに式 $(*)$ において, 両辺に含まれる $p_2$ の個数を比較することにより, ある $0<=i'_2<k, i'_2 eq.not i_2$ を満たす $i'_2$ で $p_2 | phi^(i'_2) (n)$ かつ $p_2 cancel(divides) phi^(i'_2) (m)$ を満たすものが存在する.
+  さて, さらに式 $(*)$ において, 両辺に含まれる $p_2$ の個数を比較することにより, ある $0<=i'_2<k, i'_2 eq.not i_2$ を満たす $i'_2$ で $p_2 | phi^(i'_2) (n)$ かつ $p_2 divides.not phi^(i'_2) (m)$ を満たすものが存在する.
 
-  ここで $i_2$ と $i'_2$, $n$ と $m$ を同時に適切に入れ替えて, $i'_2<i_2, p_2 | phi^(i'_2) (n), p_2 cancel(divides) phi^(i'_2) (m), p_2 cancel(divides) phi^(i_2) (n), p_2 | phi^(i_2) (m)$ が成り立つようにする.
+  ここで $i_2$ と $i'_2$, $n$ と $m$ を同時に適切に入れ替えて, $i'_2<i_2, p_2 | phi^(i'_2) (n), p_2 divides.not phi^(i'_2) (m), p_2 divides.not phi^(i_2) (n), p_2 | phi^(i_2) (m)$ が成り立つようにする.
 
   (こうしたことで, 最初の $p_1 | n$ などはもう成り立つかわからなくなるが, これから使用するのは $n, m$ に対して対称な式 $(*)$ と上に述べた条件のみであるから問題ない.)
 
-  さて, @supplylemma の $n, m, i, p$ を $phi^(i'_2) (n), phi^(i'_2) (m), i_2-i'_2, p_2$ でそれぞれ置き換えて再度適用すると, ある素数 $p_3>p_2$ と $i'_2<=i_3<i_2$ を満たす整数 $i_3$ で, $p_3 cancel(divides) phi^(i_3) (n)$ かつ $p_3 | phi^(i_3) (m)$ を満たすものが存在することがわかる.
+  さて, @supplylemma の $n, m, i, p$ を $phi^(i'_2) (n), phi^(i'_2) (m), i_2-i'_2, p_2$ でそれぞれ置き換えて再度適用すると, ある素数 $p_3>p_2$ と $i'_2<=i_3<i_2$ を満たす整数 $i_3$ で, $p_3 divides.not phi^(i_3) (n)$ かつ $p_3 | phi^(i_3) (m)$ を満たすものが存在することがわかる.
 
   この議論は無限に繰り返すことができ, $rad(n) dot rad(phi(n)) dot ... dot rad(phi^(k-1)(n))$ の任意に大きな素因数を構成できてしまう.
 

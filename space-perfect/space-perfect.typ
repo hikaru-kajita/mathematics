@@ -187,6 +187,6 @@ $k=2^epsilon q smallspace (q=2^(epsilon+1)-1:prime)$ を偶数完全数とする
 
 自然な研究の方向性としては, $alpha$ の条件を緩める, つまり $k | alpha$ であった条件をより弱いものに置き換えるということが考えられる.
 
-たとえば $k=6$ のとき $2 | alpha$ かつ $6 cancel(divides) alpha$ を満たす $alpha<=5 dot 10^11$ は, $alpha=2^4 dot 19, 2^8 dot 499, 2^12 dot 8179, 2^16 dot 131059$ のみであることがわかっている.
+たとえば $k=6$ のとき $2 | alpha$ かつ $6 divides.not alpha$ を満たす $alpha<=5 dot 10^11$ は, $alpha=2^4 dot 19, 2^8 dot 499, 2^12 dot 8179, 2^16 dot 131059$ のみであることがわかっている.
 
 そこで, 飯高先生によって, $2 | alpha$ を満たす $sigma(alpha)=2 alpha+12$ の解は $6 | alpha$ もしくは $alpha=2^e p$ の形に書けるもののみであるという予想がなされているが, 証明は困難であろう.

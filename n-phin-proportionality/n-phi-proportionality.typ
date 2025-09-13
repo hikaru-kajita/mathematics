@@ -82,7 +82,7 @@ $n=2phi(n)$ や $n=3phi(n)$ は飯高先生によって調べられており, �
 
   したがって, $B=p D smallspace (p:odd prime, D:odd)$ と書ける.
 
-  さて, $n-B phi(n)=0$ より $n$ も $p$ の倍数であるから, $n=p^e L smallspace (e>0, p cancel(divides) L)$ と書ける.
+  さて, $n-B phi(n)=0$ より $n$ も $p$ の倍数であるから, $n=p^e L smallspace (e>0, p divides.not L)$ と書ける.
 
   これと $B=p D$ を $n-B phi(n)=0$ に代入すると $p^e L-p^e D (p-1)phi(L)=0$ を得る.
 

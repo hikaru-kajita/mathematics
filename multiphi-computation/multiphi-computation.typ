@@ -281,7 +281,7 @@ $φ^2 (n)$ を効率的に計算することが可能である. 以下, その�
 
 さて, 今 $d divides m$ より, $φ(d) divides phi(m)$.
 
-さらに, $φ(m)d/φ(d)=m{product_(p divides m)(1-1/p)}{product_(p divides d)(1-1/p)}^(-1)=m product_(p divides m, p cancel(divides) d)(1-1/p)<=m$.
+さらに, $φ(m)d/φ(d)=m{product_(p divides m)(1-1/p)}{product_(p divides d)(1-1/p)}^(-1)=m product_(p divides m, p divides.not d)(1-1/p)<=m$.
 
 つまり, $φ(n m)$ は, それぞれ $n$ と $m$ 以下の整数の積に書くことができる.
 
