@@ -35,7 +35,7 @@
 #let sub = math.overline
 
 #align(center)[
-  #text(size: 18pt)[オイラーIII型メルセンヌ超完全数のダブルB型解について]
+  #text(size: 18pt)[第三種オイラー超完全数のダブルB型解について]
   #v(10pt)
   #text(size: 12pt)[梶田光]
   #v(5pt)
@@ -46,7 +46,7 @@
 
 = はじめに
 
-宮本 (2023) は第三種オイラー型メルセンヌ完全数を, 以下の連立方程式の解と定めた:
+宮本 (2023) は第三種オイラー超完全数を, 以下の連立方程式の解と定めた:
 
 $ cases(
   sub(h) A=2h phi(a)+sub(h)m+sub(h)\,,
@@ -170,7 +170,7 @@ $ cases(
 ]
 
 #theorem[
-  第三種オイラー型メルセンヌ超完全数のダブルB型解は, 以下のいずれかに当てはまる:
+  第三種オイラー超完全数のダブルB型解は, 以下のいずれかに当てはまる:
 
   - $display(alpha=1\, beta=2^e h^f\, m=(-h-1-2^e sub(h)h^f)/(h+1))$
   - $display(alpha=2^e\, beta=h^f\, m=-sub(h)h^f-h 2^e+sub(h))$
