@@ -176,6 +176,8 @@ $f'_2$ がそこから計算でき, これが $sqrt(N)$ 以下なら $phi(n)$ �
 
 これを考慮すると, #highlight[全体の時間計算量は $O(k N log N)$, 空間計算量が $O(sqrt(N)log N)$, 消費する外部メモリの容量が $O(k N)$, 合計の I/O が $O(N(k+log N))$] となって, これは十分高速である.
 
+また, 派生してLUTを構築しないアルゴリズムも考えることができ, この場合外部メモリの容量は $O(N)$ まで落ちる.
+
 
 = 最適化について
 
@@ -199,11 +201,11 @@ $f'_2$ がそこから計算でき, これが $sqrt(N)$ 以下なら $phi(n)$ �
   align: right,
   figure(
     placement: none,
-    qr-code("https://github.com/hikaru-kajita/mathematics/tree/main/multiphi-computation", width: 80pt)
+    qr-code("https://github.com/hikaru-kajita/mathematics/tree/main/multiphi-computation", width: 70pt)
   ),
   [
     論文: #link("https://github.com/hikaru-kajita/mathematics/tree/main/multiphi-computation")
+    #bibliography("works.bib", style: "ieee", title: "参考文献")
   ]
 )
 
-#bibliography("works.bib", style: "ieee", title: "参考文献")
